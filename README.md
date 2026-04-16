@@ -1,2 +1,2 @@
-# PPO-Pr-tica-Profissionalizante-Orientada-
+# PPO-Pratica-Profissionalizante-Orientada-
 Projetos do PPO
