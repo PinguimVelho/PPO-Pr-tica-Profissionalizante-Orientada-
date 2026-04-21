@@ -61,7 +61,7 @@ const saveClient = () => {
             updateTable()
             closeModal()
         }
-        activeNotification("Funcionário Salvo!!", '#06b6d4')
+        activeNotification("Cliente Salvo!!", '#06b6d4')
     }
 }
 
@@ -114,11 +114,11 @@ const editDelete = (event) => {
             
         } else{
             const client = readClient()[index]
-            const response = confirm (`Deseja mesmo excluir o funcionário ${client.nome}?`)
+            const response = confirm (`Deseja mesmo excluir o cliente ${client.nome}?`)
             if (response == true) {
                 deleteClient(index)
                 updateTable()    
-                activeNotification("Funcionário Deletado!!", '#f43f5e')
+                activeNotification("Cliente Deletado!!", '#f43f5e')
             }
         }
     }
