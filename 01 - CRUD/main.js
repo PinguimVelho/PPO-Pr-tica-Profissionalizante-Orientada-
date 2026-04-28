@@ -1,7 +1,7 @@
 //CRUD - Create Read Update Delete
 
-const getLocalStorage = () => JSON.parse(localStorage.getItem('db_client')) ?? []
 const setLocalStorage = (dbClient) => localStorage.setItem("db_client", JSON.stringify(dbClient))
+const getLocalStorage = () => JSON.parse(localStorage.getItem('db_client')) ?? []
 
 //CRUD - Create:
 const createClient = (client) => {  
@@ -52,7 +52,7 @@ const saveClient = () => {
             cidade: document.getElementById('cidade').value
         }
         const index = document.getElementById('nome').dataset.index
-        if (index == 'new') {
+        if (!index ||index == 'new') {
             createClient(client)
             updateTable()
             closeModal()
