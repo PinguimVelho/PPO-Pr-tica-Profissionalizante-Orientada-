@@ -1,3 +1,29 @@
+const btn = document.querySelector('#enviar-musica')
+const formulario = document.querySelector('form')
+const inputs = formulario.querySelectorAll('input')
+
+const salvarMusiquinha = () => {
+  alert(
+    inputs.querySelector('#title').value +
+    inputs.querySelector('#autor').value +
+    inputs.querySelector('#genero').value 
+  );
+  
+}
+
+
+btn.addEventListener('click', salvarMusiquinha)
+
+/*
+
+//================
+// Eventos
+// ===============
+
+btn.addEventListener('click', salvarMusica())
+
+//================
+
 // Local Storage
 const setLocalStorage = (musicas_db) => localStorage.setItem('musicas_db', JSON.stringify)
 const geLocalStorage = () => JSON.parse(localStorage.getItem('musicas_db')) ?? []
@@ -36,3 +62,11 @@ const deleteMusica = () => {
     musicas_db.splice(index, 1)
     setLocalStorage(musicas_db)
 }
+
+// Salvar musica
+
+const salvarMusica = () => {
+    
+}
+
+*/
