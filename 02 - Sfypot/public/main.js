@@ -2,46 +2,54 @@ const formulario = document.querySelector("form")
 const btn = formulario.querySelector("#enviar-musica")
 
 class Musica {
-  constructor(titulo, autor, genero ) {
+  constructor(mp3, titulo, autor, genero) {
+    this.mp3 = mp3
     this.titulo = titulo;
     this.autor = autor;
     this.genero = genero;
   }
+}
 
-  static createMusica(musica) {
-    const musicas_db = getLocalStorage()
-    musicas_db.push(musica)
-    setLocalStorage(musicas_db)
-  }
+const createMusica = (musica) => {
+  const musicas_db = getLocalStorage()
+  musicas_db.push(musica)
+  setLocalStorage(musicas_db)
+}
 
-   static updateMusica(index, updMusica) {
+const updateMusica = (index, updMusica) => {
   const musicas_db = getLocalStorage()
   musicas_db[index] = updMusica
   setLocalStorage(musicas_db)
-  }
+}
 
-  static deleteMusica() {
+const deleteMusica = () => {
   const musicas_db = getLocalStorage()
   musicas_db.splice(index, 1)
   setLocalStorage(musicas_db)
-  }
-
 }
 
-const salvarMusica = () => {
-  const arquivo = formulario.querySelector("#arquivo")
+const salvarMusica = (e) => {
+ if (camposValidos()){  
+  const arquivo = formulario.querySelector("#arquivo").files[0]
+  const leitor = new FileReader()
   const titulo = formulario.querySelector("#title").value
   const autor = formulario.querySelector("#autor").value
   const genero = formulario.querySelector("#genero").value
 
-  Musica.createMusica(new Musica(titulo,autor,genero))
+  leitor.onload = (evento) => {
+    const mp3string = evento.target.result
+    createMusica(new Musica( mp3string, titulo, autor, genero))
+  }
+
+  leitor.readAsDataURL(arquivo)
+  }
 }
 
+// Funções usadas em funções ////////////////////
 
-// Aqui eu vou tentar fazer como o Varela ensinou. Tentar salvar as coisas em um arquivo js ao invés do localStorage, mas antes preciso falar com o Rauber sobre.
-// class Playlist {
-//   #musicas_db
-// }
+const camposValidos = () => {
+  return formulario.reportValidity()
+}
 
 
 //================
