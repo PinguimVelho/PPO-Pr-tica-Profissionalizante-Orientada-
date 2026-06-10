@@ -1,5 +1,5 @@
-const formulario = document.querySelector("form")
-const btn = formulario.querySelector("#enviar-musica")
+const formulario = document.querySelector('form')
+const btn = formulario.querySelector('#enviar-musica')
 
 class Musica {
   constructor(mp3, titulo, autor, genero) {
@@ -10,53 +10,89 @@ class Musica {
   }
 }
 
-const createMusica = (musica) => {
-  const musicas_db = getLocalStorage()
+// CRUD ///////////////////////////////
+const createMusica = async (musica) => {
+  const musicas_db = await getIndexedDB()
   musicas_db.push(musica)
-  setLocalStorage(musicas_db)
+  await setIndexedDB(musicas_db)
 }
 
-const updateMusica = (index, updMusica) => {
-  const musicas_db = getLocalStorage()
+const updateMusica = async (index, updMusica) => {
+  const musicas_db = await getIndexedDB()
   musicas_db[index] = updMusica
-  setLocalStorage(musicas_db)
+  await setIndexedDB(musicas_db)
 }
 
-const deleteMusica = () => {
-  const musicas_db = getLocalStorage()
+const deleteMusica = async (index) => {
+  const musicas_db = await getIndexedDB()
   musicas_db.splice(index, 1)
-  setLocalStorage(musicas_db)
+  await setIndexedDB(musicas_db)
 }
+////////////////////////////////////
 
-const salvarMusica = (e) => {
+const salvarMusica = async () => {
  if (camposValidos()){  
-  const arquivo = formulario.querySelector("#arquivo").files[0]
-  const leitor = new FileReader()
-  const titulo = formulario.querySelector("#title").value
-  const autor = formulario.querySelector("#autor").value
-  const genero = formulario.querySelector("#genero").value
-
-  leitor.onload = (evento) => {
-    const mp3string = evento.target.result
-    createMusica(new Musica( mp3string, titulo, autor, genero))
-  }
-
-  leitor.readAsDataURL(arquivo)
+  const arquivo = formulario.querySelector('#arquivo').files[0]
+  const titulo = formulario.querySelector('#title').value
+  const autor = formulario.querySelector('#autor').value
+  const genero = formulario.querySelector('#genero').value
+  
+  await createMusica(new Musica( arquivo, titulo.trim(), autor.trim(), genero.trim()))
+  formulario.reset()
   }
 }
 
 // Funções usadas em funções ////////////////////
 
-const camposValidos = () => {
-  return formulario.reportValidity()
-}
-
+const camposValidos = () => formulario.reportValidity()
 
 //================
-// Local Storage
+// Indexed DB
 // ===============
-const setLocalStorage = (musicas_db) => localStorage.setItem('musicas_db', JSON.stringify(musicas_db))
-const getLocalStorage = () => JSON.parse(localStorage.getItem('musicas_db')) ?? []
+const openDB = () => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('musicasDB', 1)
+
+    request.onupgradeneeded = () => {
+      const db = request.result
+
+      if (!db.objectStoreNames.contains('dados')) {
+        db.createObjectStore('dados')
+      }
+    }
+
+    request.onsuccess = () => resolve(request.result)
+    request.onerror = () => reject(request.error)
+  })
+}
+
+const getIndexedDB = async () => {
+  const db = await openDB()
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction('dados', 'readonly')
+    const store = transaction.objectStore('dados')
+
+    const request = store.get('musicas_db')
+
+    request.onsuccess = () => resolve(request.result ?? [])
+    request.onerror = () => reject(request.error)
+  })
+}
+
+const setIndexedDB = async (musicas_db) => {
+  const db = await openDB()
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction('dados', 'readwrite')
+    const store = transaction.objectStore('dados')
+
+    const request = store.put(musicas_db, 'musicas_db')
+
+    request.onsuccess = () => resolve()
+    request.onerror = () => reject(request.error)
+  })
+}
 
 //================
 // Eventos
