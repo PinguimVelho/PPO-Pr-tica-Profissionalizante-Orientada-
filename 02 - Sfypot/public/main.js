@@ -1,5 +1,5 @@
 const formulario = document.querySelector('form')
-const btn = formulario.querySelector('#enviar-musica')
+const btn = document.querySelector('#enviar-musica')
 
 class Musica {
   constructor(mp3, titulo, autor, genero) {
