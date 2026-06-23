@@ -1,5 +1,6 @@
 const formulario = document.querySelector('form')
 const btn = document.querySelector('#enviar-musica')
+const template = document.querySelector('template')
 
 class Musica {
   constructor(mp3, titulo, autor, genero) {
@@ -39,7 +40,22 @@ const salvarMusica = async () => {
   
   await createMusica(new Musica( arquivo, titulo.trim(), autor.trim(), genero.trim()))
   formulario.reset()
+  carregarMusica()
   }
+}
+
+const criarLinha = async () => {
+  const musicas_db = await getIndexedDB()
+  for (let index = 1; index < musicas_db.length; index++) {
+    const musica = array[index];
+    const newRow = document.createElement('tr')
+    newRow.innerHTML = `
+    <td>${musica.arquivo}</td>
+    <td>${client.autor}</td>
+    <td>${client.genero}</td>
+    `
+  }
+
 }
 
 // Funções usadas em funções ////////////////////
