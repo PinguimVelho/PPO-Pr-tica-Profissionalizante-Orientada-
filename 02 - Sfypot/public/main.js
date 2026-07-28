@@ -1,6 +1,7 @@
 const formulario = document.querySelector('form')
 const btn = document.querySelector('#enviar-musica')
-const template = document.querySelector('template')
+const btnCancel = document.querySelector('#cancelar-musica')
+const tbody = document.querySelector("tbody");
 
 class Musica {
   constructor(mp3, titulo, autor, genero) {
@@ -40,22 +41,74 @@ const salvarMusica = async () => {
   
   await createMusica(new Musica( arquivo, titulo.trim(), autor.trim(), genero.trim()))
   formulario.reset()
-  carregarMusica()
+  await criarLinha()
+  await updateTabela()
   }
+}
+
+const formatarDuracao = (segundos) => {
+    const min = Math.floor(segundos / 60);
+    const seg = Math.floor(segundos % 60);
+    return `${min}:${seg.toString().padStart(2, "0")}`;
 }
 
 const criarLinha = async () => {
   const musicas_db = await getIndexedDB()
-  for (let index = 1; index < musicas_db.length; index++) {
-    const musica = array[index];
+  for (let index = 0; index < musicas_db.length; index++) { 
+    const musica = musicas_db[index];
+    const audioURL = URL.createObjectURL(musica.mp3)
+    const audio = new Audio(audioURL)
+
+    await new Promise(resolve => {
+      audio.onloadedmetadata = resolve
+    })
+    const duracao = audio.duration
+
     const newRow = document.createElement('tr')
     newRow.innerHTML = `
-    <td>${musica.arquivo}</td>
-    <td>${client.autor}</td>
-    <td>${client.genero}</td>
+    <audio src="${audioURL}"></audio>
+    <td><button type="button" id="play-${index}">▶</button>
+    <td>${musica.titulo}</td>
+    <td>${musica.autor}</td>
+    <td>${formatarDuracao(duracao)}</td>
+    <td><button type="button" id="edit-${index}">Editar</button></td>
+    <td><button type="button" id="delete-${index}">Apagar</button></td>
     `
-  }
 
+    tbody.appendChild(newRow);
+  }
+}
+
+const updateTabela = async () => {
+  limparTabela()
+  await criarLinha()
+}
+
+const limparTabela = () => {
+    tbody.innerHTML = '';
+}
+
+const playEditDelete = async (event) => {
+  if (event.target.type == 'button') {
+    const [action, indexStr] = event.target.id.split('-')
+    const index = Number(indexStr)
+    if (action == 'edit') {
+      alert('depois resolvo this') // RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE
+      return
+    }
+    if (action == 'delete') {
+      const musicas_db = await getIndexedDB()
+      const response = confirm(`Deseja mesmo excluir essa música?`)
+      if (response == true) {
+        await deleteMusica(index)
+        await updateTabela()    
+      }
+      return
+    }
+    if (action == 'play') {
+      
+    }
+  }
 }
 
 // Funções usadas em funções ////////////////////
@@ -114,3 +167,10 @@ const setIndexedDB = async (musicas_db) => {
 // Eventos
 // ===============
 btn.addEventListener('click', salvarMusica)
+// btnCancel.addEventListener('click' () => {})
+
+document.querySelector('html')
+  .addEventListener('load', updateTabela())
+
+tbody.addEventListener('click', playEditDelete)
+
