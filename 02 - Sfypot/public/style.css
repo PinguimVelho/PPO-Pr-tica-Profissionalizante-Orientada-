@@ -1,0 +1,190 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #030303, #120a1d);
+    color: #f4f2ff;
+    min-height: 100vh;
+    padding: 40px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.8rem;
+    color: #c084fc;
+    margin-bottom: 35px;
+    text-shadow: 0 0 10px rgba(192, 132, 252, .4);
+}
+
+h2 {
+    margin-bottom: 15px;
+    color: #d8b4fe;
+}
+
+/* Card */
+
+.modal {
+    max-width: 600px;
+    margin: auto;
+    background: rgba(40, 26, 61, .95);
+    border: 1px solid #5b21b6;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    margin-bottom: 45px;
+}
+
+/* Form */
+
+.form-musica {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-musica input {
+    background: #36204f;
+    border: 1px solid transparent;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    outline: none;
+    transition: .25s;
+}
+
+.form-musica input::placeholder {
+    color: #b8a7d8;
+}
+
+.form-musica input:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 8px rgba(168, 85, 247, .4);
+}
+
+input[type=file] {
+    cursor: pointer;
+}
+
+/* Botões */
+
+footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+button {
+    padding: 11px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: .95rem;
+    cursor: pointer;
+    transition: .2s;
+    font-weight: 600;
+}
+
+#enviar-musica {
+    background: #9333ea;
+    color: white;
+}
+
+#enviar-musica:hover {
+    background: #a855f7;
+    transform: translateY(-2px);
+}
+
+#cancelar-musica {
+    background: #4b5563;
+    color: white;
+}
+
+#cancelar-musica:hover {
+    background: #6b7280;
+    transform: translateY(-2px);
+}
+
+/* Tabela */
+
+#list-musicas {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(40, 26, 61, .95);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .3);
+}
+
+#list-musicas thead {
+    background: #6d28d9;
+}
+
+#list-musicas th {
+    padding: 16px;
+    color: white;
+    font-weight: 600;
+}
+
+#list-musicas td {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+#list-musicas tbody tr {
+    transition: .2s;
+}
+
+#list-musicas tbody tr:hover {
+    background: rgba(168, 85, 247, .15);
+}
+
+#list-musicas tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Botões que ficarão na coluna Opções */
+
+#list-musicas button {
+    background: #7c3aed;
+    margin-right: 6px;
+    padding: 7px 12px;
+    font-size: .85rem;
+}
+
+#list-musicas button:hover {
+    background: #9333ea;
+}
+
+/* Scroll horizontal caso a tabela fique grande */
+
+table {
+    display: block;
+    overflow-x: auto;
+}
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .modal {
+        padding: 20px;
+    }
+
+    footer {
+        flex-direction: column;
+    }
+
+    footer button {
+        width: 100%;
+    }
+}

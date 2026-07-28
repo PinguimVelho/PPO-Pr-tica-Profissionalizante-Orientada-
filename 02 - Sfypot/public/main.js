@@ -66,13 +66,15 @@ const criarLinha = async () => {
 
     const newRow = document.createElement('tr')
     newRow.innerHTML = `
-    <audio src="${audioURL}"></audio>
+    <audio id="audio-${index}" src="${audioURL}"></audio>
     <td><button type="button" id="play-${index}">▶</button>
     <td>${musica.titulo}</td>
     <td>${musica.autor}</td>
     <td>${formatarDuracao(duracao)}</td>
-    <td><button type="button" id="edit-${index}">Editar</button></td>
-    <td><button type="button" id="delete-${index}">Apagar</button></td>
+    <td>
+      <button type="button" id="edit-${index}">Editar</button>
+      <button type="button" id="delete-${index}">Apagar</button>
+    </td>
     `
 
     tbody.appendChild(newRow);
@@ -93,7 +95,7 @@ const playEditDelete = async (event) => {
     const [action, indexStr] = event.target.id.split('-')
     const index = Number(indexStr)
     if (action == 'edit') {
-      alert('depois resolvo this') // RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE
+      alert('depois resolvo this') // RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE
       return
     }
     if (action == 'delete') {
@@ -106,7 +108,15 @@ const playEditDelete = async (event) => {
       return
     }
     if (action == 'play') {
-      
+      const audio = tbody.querySelector(`#audio-${index}`)
+      const botao = tbody.querySelector(`#play-${index}`)
+      if (audio.paused) {
+        audio.play();
+        botao.textContent = "⏸"
+        return
+      }
+      audio.pause()
+      botao.textContent = "▶"
     }
   }
 }
