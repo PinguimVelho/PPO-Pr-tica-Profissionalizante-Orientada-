@@ -110,6 +110,10 @@ const playEditDelete = async (event) => {
     if (action == 'play') {
       const audio = tbody.querySelector(`#audio-${index}`)
       const botao = tbody.querySelector(`#play-${index}`)
+      audio.addEventListener('ended', () => {
+        botao.textContent = "▶"
+      })
+
       if (audio.paused) {
         audio.play();
         botao.textContent = "⏸"
@@ -183,4 +187,3 @@ document.querySelector('html')
   .addEventListener('load', updateTabela())
 
 tbody.addEventListener('click', playEditDelete)
-
