@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="main.js" defer></script>
     <title>Sfypot</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
     <h1>Sfypot</h1>
@@ -44,5 +45,25 @@
 
         </tbody>
     </table>
+
+    <div class="player">
+
+    <span id="musicName"></span>
+    <audio id="player" src=""></audio>
+    <div class="controls">
+      <button id="botaoBack"><i class='bx bx-skip-previous'></i></button>
+      <button id="botaoPlayPause"><i class='bx bx-caret-right'></i></button>
+      <button id="botaoNext"><i class='bx bx-skip-next'></i></button>
+    </div>
+    <div class="footer">
+      <div class="progress-bar">
+        <div class="progress"></div>
+    </div>
+      <div class="time">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

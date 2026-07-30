@@ -3,6 +3,10 @@ const btn = document.querySelector('#enviar-musica')
 const btnCancel = document.querySelector('#cancelar-musica')
 const tbody = document.querySelector("tbody");
 
+const botaoNext = document.querySelector('#botaoNext')
+const botaoPlayPause = document.querySelector('#botaoPlayPause')
+const botaoBack = document.querySelector('#botaoBack')
+
 class Musica {
   constructor(mp3, titulo, autor, genero) {
     this.mp3 = mp3
@@ -95,12 +99,12 @@ const playEditDelete = async (event) => {
     const [action, indexStr] = event.target.id.split('-')
     const index = Number(indexStr)
     if (action == 'edit') {
-      alert('depois resolvo this') // RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE
+      alert('depois resolvo this') // RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       return
     }
     if (action == 'delete') {
       const musicas_db = await getIndexedDB()
-      const response = confirm(`Deseja mesmo excluir essa música?`)
+      const response = confirm(`Deseja mesmo excluir a música ${musicas_db[index].titulo}?`)
       if (response == true) {
         await deleteMusica(index)
         await updateTabela()    
