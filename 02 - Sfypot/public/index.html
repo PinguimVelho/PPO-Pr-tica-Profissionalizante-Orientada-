@@ -10,25 +10,7 @@
 </head>
 <body>
     <h1>Sfypot</h1>
-    <div class="modal">
-        <header>
-            <h2>Adicionar Música:</h2>
-        </header>
-        <form class="form-musica">
-            <input type="file" id="arquivo" placeholder="Arquivo mp3" accept="audio/mp3" required>
-            <br><br>
-            <input type="text" id="title" placeholder="Título da música" required>
-            <br><br>
-            <input type="text" id="autor" placeholder="Nome do Autor" required>
-            <br><br>
-            <input type="text" id="genero" placeholder="Gênero da música" required>
-            <br><br>
-        </form>
-        <footer>
-            <button type="button" id="enviar-musica">Enviar</button>
-            <button type="button" id="cancelar-musica">Cancelar</button>
-        </footer>
-    </div>
+    <button type="button" id="cadastrarMusica">Cadastrar Música</button>
     
     <h2>Lista de Músicas:</h2>
     <table id="list-musicas">
@@ -47,7 +29,6 @@
     </table>
 
     <div class="player">
-
     <span id="musicName"></span>
     <audio id="player" src=""></audio>
     <div class="controls">
@@ -65,5 +46,30 @@
       </div>
     </div>
   </div>
+
+
+  <div class="modal">
+        <header>
+            <h2>Adicionar Música:</h2>
+        </header>
+        <form class="form-musica">
+            <input type="file" id="arquivo" placeholder="Arquivo mp3" accept="audio/mp3" required>
+            <br><br>
+            <input type="text" id="title" placeholder="Título da música" required>
+            <br><br>
+            <input type="text" id="autor" placeholder="Nome do Autor" required>
+            <br><br>
+            <input type="text" id="genero" placeholder="Gênero da música" required>
+            <br><br>
+            <select name="Álbum" id="album">
+            </select>
+            <br><br>
+        </form>
+        <footer>
+            <button type="button" id="enviar-musica">Enviar</button>
+            <button type="button" id="cancelMusica">Cancelar</button>
+        </footer>
+    </div>
+
 </body>
 </html>

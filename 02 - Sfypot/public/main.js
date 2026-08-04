@@ -180,14 +180,30 @@ const setIndexedDB = async (musicas_db) => {
     request.onerror = () => reject(request.error)
   })
 }
+// =======================================
+// Modal
+// =======================================
+
+const openModal = () => document.querySelector('.modal').classList.add('active');
+
+const closeModal = () => {
+    document.querySelector('.modal').classList.remove('active')
+}
 
 //================
 // Eventos
 // ===============
-btn.addEventListener('click', salvarMusica)
+
+document.querySelector('#cadastrarMusica')
+    .addEventListener('click', openModal);
+
+document.querySelector('#cancelMusica')
+    .addEventListener('click', closeModal);
+
+btn.addEventListener('click', salvarMusica);
 // btnCancel.addEventListener('click' () => {})
 
 document.querySelector('html')
-  .addEventListener('load', updateTabela())
+  .addEventListener('load', updateTabela());
 
-tbody.addEventListener('click', playEditDelete)
+tbody.addEventListener('click', playEditDelete);
