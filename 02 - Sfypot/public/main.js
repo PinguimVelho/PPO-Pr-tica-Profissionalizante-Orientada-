@@ -3,14 +3,18 @@ const btn = document.querySelector('#enviar-musica')
 const btnCancel = document.querySelector('#cancelar-musica')
 const tbody = document.querySelector("tbody");
 
-const botaoNext = document.querySelector('#botaoNext')
-const botaoPlayPause = document.querySelector('#botaoPlayPause')
-const botaoBack = document.querySelector('#botaoBack')
+const classPlayer = document.querySelector('.player')
+const player = classPlayer.querySelector('#audioPlayer')
+const botaoNext = classPlayer.querySelector('#botaoNext')
+const botaoPlayPause = classPlayer.querySelector('#botaoPlayPause')
+const botaoBack = classPlayer.querySelector('#botaoBack')
+
+const audioTocando = false
 
 class Musica {
   constructor(mp3, titulo, autor, genero) {
     this.mp3 = mp3
-    this.titulo = titulo;
+    this.titulo = titulo; 
     this.autor = autor;
     this.genero = genero;
   }
@@ -111,18 +115,13 @@ const playEditDelete = async (event) => {
       return
     }
     if (action == 'play') {
-      const botao = tbody.querySelector(`#play-${index}`)
-      audio.addEventListener('ended', () => {
-        botao.textContent = "▶"
-      })
+      const botao = tbody.querySelector(`#play-${index}-${audioURL}`)
 
-      if (audio.paused) {
-        audio.chamarPlayer();
-        botao.textContent = "⏸"
+      if (audioTocando == false) {
+        chamarPlayer(audioURL);
         return
       }
-      audio.pause()
-      botao.textContent = "▶"
+      chamarPlayer(false)
     }
   }
 }
@@ -130,6 +129,10 @@ const playEditDelete = async (event) => {
 // Funções usadas em funções ////////////////////
 
 const camposValidos = () => formulario.reportValidity()
+
+const chamarPlayer = (SRC) => {
+  player.src = SRC
+}
 
 //================
 // Indexed DB
