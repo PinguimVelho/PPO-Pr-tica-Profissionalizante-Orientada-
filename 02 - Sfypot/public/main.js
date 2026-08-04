@@ -70,8 +70,7 @@ const criarLinha = async () => {
 
     const newRow = document.createElement('tr')
     newRow.innerHTML = `
-    <audio id="audio-${index}" src="${audioURL}"></audio>
-    <td><button type="button" id="play-${index}">▶</button>
+    <td><button type="button" id="play-${index}-${audioURL}">▶</button>
     <td>${musica.titulo}</td>
     <td>${musica.autor}</td>
     <td>${formatarDuracao(duracao)}</td>
@@ -96,7 +95,7 @@ const limparTabela = () => {
 
 const playEditDelete = async (event) => {
   if (event.target.type == 'button') {
-    const [action, indexStr] = event.target.id.split('-')
+    const [action, indexStr, audioURL] = event.target.id.split('-')
     const index = Number(indexStr)
     if (action == 'edit') {
       alert('depois resolvo this') // RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -112,14 +111,13 @@ const playEditDelete = async (event) => {
       return
     }
     if (action == 'play') {
-      const audio = tbody.querySelector(`#audio-${index}`)
       const botao = tbody.querySelector(`#play-${index}`)
       audio.addEventListener('ended', () => {
         botao.textContent = "▶"
       })
 
       if (audio.paused) {
-        audio.play();
+        audio.chamarPlayer();
         botao.textContent = "⏸"
         return
       }
