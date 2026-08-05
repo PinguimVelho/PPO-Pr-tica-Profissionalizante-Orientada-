@@ -4,6 +4,7 @@ const btnCancel = document.querySelector('#cancelar-musica')
 const tbody = document.querySelector("tbody");
 
 const classPlayer = document.querySelector('.player')
+const musicName = classPlayer.querySelector('#musicName')
 const spanIndex = classPlayer.querySelector('.indexMusica')
 const player = classPlayer.querySelector('#audioPlayer')
 
@@ -16,6 +17,9 @@ const iconPlayPause = botaoPlayPause.querySelector('i')
 const botaoNext = classPlayer.querySelector('#botaoNext')
 const iconNext = document.querySelector('i')
 
+const progress = document.querySelector(".progress")
+const tempoAtual = document.querySelector("#tempoAtual")
+const duracaoPlayer = document.querySelector("#duracao")
 
 // ============
 // Espaço teste
@@ -154,6 +158,7 @@ const chamarPlayer = async (action, index) => {
   const btnPress = tbody.querySelector(`#play-${index}`)
   pausarTudo()
   if (action == 'play') {
+    musicName.textContent = musica.titulo
     player.src = audioURL
     spanIndex.id = index
     await player.play()
@@ -216,6 +221,15 @@ const Next = async () => {
   }
 }
 
+const atualizarBarra = () => {
+  if (!player.duration) return
+  const porcentagem = (player.currentTime / player.duration) * 100  
+  progress.style.width = `${porcentagem}%`
+  tempoAtual.textContent = formatarDuracao(player.currentTime)
+  duracaoPlayer.textContent = formatarDuracao(player.duration)
+  
+}
+
 // =======================================
 // Modal
 // =======================================
@@ -225,8 +239,6 @@ const openModal = () => document.querySelector('.modal').classList.add('active')
 const closeModal = () => {
   document.querySelector('.modal').classList.remove('active')
 }
-
-
 
 //================
 // Indexed DB
@@ -302,3 +314,5 @@ player.addEventListener('ended', () => {
 botaoBack.addEventListener('click', Back)
 botaoPlayPause.addEventListener('click', PlayPause)
 botaoNext.addEventListener('click', Next)
+
+player.addEventListener('timeupdate', atualizarBarra)
