@@ -52,7 +52,7 @@ const saveClient = () => {
             cidade: document.getElementById('cidade').value
         }
         const index = document.getElementById('nome').dataset.index
-        if (!index ||index == 'new') {
+        if (!index || index == 'new') {
             createClient(client)
             updateTable()
             closeModal()
@@ -61,6 +61,7 @@ const saveClient = () => {
             updateTable()
             closeModal()
         }
+        index
         activeNotification("Cliente Salvo!!", '#06b6d4')
     }
 }

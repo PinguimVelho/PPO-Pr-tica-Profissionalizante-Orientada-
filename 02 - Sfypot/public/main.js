@@ -2,6 +2,7 @@ const formulario = document.querySelector('.form-musica')
 const btnEnviar = document.querySelector('#enviar-musica')
 const btnCancel = document.querySelector('#cancelar-musica')
 const tbody = document.querySelector("tbody");
+const dataIndex_modal = formulario.querySelector('#title')
 
 const classPlayer = document.querySelector('.player')
 const musicName = classPlayer.querySelector('#musicName')
@@ -23,7 +24,6 @@ const duracaoPlayer = document.querySelector("#duracao")
 
 // ============
 // Espaço teste
-
 
 // ============
 
@@ -59,16 +59,25 @@ const deleteMusica = async (index) => {
 
 const salvarMusica = async () => {
   if (camposValidos()) {
+
     const arquivo = formulario.querySelector('#arquivo').files[0]
     const titulo = formulario.querySelector('#title').value
     const autor = formulario.querySelector('#autor').value
     const genero = formulario.querySelector('#genero').value
 
-    await createMusica(new Musica(arquivo, titulo.trim(), autor.trim(), genero.trim()))
+    
+    if (dataIndex_modal.dataset.index == 'new') {
+      await createMusica(new Musica(arquivo, titulo.trim(), autor.trim(), genero.trim()))
+    }
+    if (dataIndex_modal.dataset.index != 'new') {
+      const index = dataIndex_modal.dataset.index
+      await updateMusica(index, new Musica(arquivo, titulo.trim(), autor.trim(), genero.trim()))
+    }
     formulario.reset()
     await criarLinha()
-    await updateTabela()
+    updateTabela()
     closeModal()
+    dataIndex_modal.dataset.index = 'new'
   }
 }
 
@@ -115,51 +124,53 @@ const limparTabela = () => {
 }
 
 const playEditDelete = async (event) => {
-  if (event.target.type == 'button' || event.target.tagName  == 'I') {
+  if (event.target.type == 'button' || event.target.tagName == 'I') {
     const [action, indexStr] = event.target.id.split('-')
     const index = Number(indexStr)
     const btnPress = tbody.querySelector(`#play-${index}`)
     if (action == 'edit') {
-      await editarMusica(index)
-      return
+      await actionEdit(index)
     }
     if (action == 'delete') {
-      const musicas_db = await getIndexedDB()
-      const response = confirm(`Deseja mesmo excluir a música ${musicas_db[index].titulo}?`)
-      if (response == true) {
-        await deleteMusica(index)
-        await updateTabela()
-      }
-      return
+      await actionDelete(index)
     }
     if (action == 'play') {
-      if (player.paused && spanIndex.id == index) {
-        await chamarPlayer('continue', index)
-        return
-      }
-      if (player.paused || spanIndex.id != index) {
-        await chamarPlayer('play', index);
-        return
-      }
-      if (!player.paused && spanIndex.id == index) {
-        await chamarPlayer('pause', index)
-        return
-      }
+      await actionPlay(index)
     }
   }
 }
 
-const editarMusica = async (index) => {
+const actionDelete = async (index) => {
+  const musicas_db = await getIndexedDB()
+  const response = confirm(`Deseja mesmo excluir a música ${musicas_db[index].titulo}?`)
+  if (response == true) {
+    await deleteMusica(index)
+    await updateTabela()
+  }
+}
+
+const actionPlay = async (index) => {
+  if (player.paused && spanIndex.id == index) {
+    await chamarPlayer('continue', index)
+    return
+  }
+  if (player.paused || spanIndex.id != index) {
+    await chamarPlayer('play', index);
+    return
+  }
+  if (!player.paused && spanIndex.id == index) {
+    await chamarPlayer('pause', index)
+    return
+  }
+}
+
+const actionEdit = async (index) => {
   const musicas_db = await getIndexedDB()
   const musica = musicas_db[index]
-  openModal()
+
+  dataIndex_modal.dataset.index = index
   await preencherCampos(musica)
-  
-  await updateMusica(index, musica)
-  formulario.reset()
-  await criarLinha()
-  await updateTabela()
-  closeModal()
+  openModal()
 }
 
 const preencherCampos = async (musica) => {
@@ -167,7 +178,7 @@ const preencherCampos = async (musica) => {
   formulario.querySelector('#title').value = musica.titulo
   formulario.querySelector('#autor').value = musica.autor
   formulario.querySelector('#genero').value = musica.genero
-} 
+}
 
 // A partir daqui é o player
 
@@ -212,7 +223,7 @@ const camposValidos = () => formulario.reportValidity()
 
 const Back = async () => {
   if (spanIndex.id > 0) {
-    const newIndex =  Number(spanIndex.id)- 1
+    const newIndex = Number(spanIndex.id) - 1
     await chamarPlayer('play', newIndex)
   }
 }
@@ -235,19 +246,19 @@ const PlayPause = async () => {
 const Next = async () => {
   const musicas_db = await getIndexedDB()
   if (spanIndex.id < (musicas_db.length) - 1) {
-    const newIndex =  Number(spanIndex.id) + 1;
-    
+    const newIndex = Number(spanIndex.id) + 1;
+
     await chamarPlayer('play', newIndex)
   }
 }
 
 const atualizarBarra = () => {
   if (!player.duration) return
-  const porcentagem = (player.currentTime / player.duration) * 100  
+  const porcentagem = (player.currentTime / player.duration) * 100
   progress.style.width = `${porcentagem}%`
   tempoAtual.textContent = formatarDuracao(player.currentTime)
   duracaoPlayer.textContent = formatarDuracao(player.duration)
-  
+
 }
 
 // =======================================
@@ -320,15 +331,12 @@ document.querySelector('#cancelMusica')    // Fechar o modal
 
 btnEnviar.addEventListener('click', salvarMusica); // salvar a musicakk
 
-document.querySelector('html')                    // atualizar a tabela logo q abre o código
-  .addEventListener('load', updateTabela());
-
 tbody.addEventListener('click', playEditDelete);  // funções de play edit e delete de cada música
 
 player.addEventListener('ended', () => {
-        pausarTudo
-        iconPlayPause.className = 'bx bx-play'
-      })
+  pausarTudo
+  iconPlayPause.className = 'bx bx-play'
+})
 
 //eventos do player
 botaoBack.addEventListener('click', Back)
@@ -336,3 +344,5 @@ botaoPlayPause.addEventListener('click', PlayPause)
 botaoNext.addEventListener('click', Next)
 
 player.addEventListener('timeupdate', atualizarBarra)
+
+updateTabela()
