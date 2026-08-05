@@ -24,10 +24,20 @@ const tempoAtual = document.querySelector("#tempoAtual")
 const duracaoPlayer = document.querySelector("#duracao")
 
 // ============
-// Espaço teste
 
-// ============
+const formAlbum = document.querySelector(".form-album");
+const btnCriarAlbum = document.querySelector("#enviar-album");
+const btnCancelarAlbum = document.querySelector("#cancel-album");
 
+
+
+class Album {
+    constructor(capa, titulo, musicas=[]) {
+        this.capa = capa;
+        this.titulo = titulo;
+        this.musicas = musicas;
+    }
+}
 
 class Musica {
   constructor(mp3, titulo, autor, genero) {
@@ -332,7 +342,18 @@ const setIndexedDB = async (musicas_db) => {
 // Criar Albuns 🌟
 // ========================================================
 
-const openAlbumModal
+const openAlbumModal = () => document.querySelector('.modal_2').classList.add('active');
+
+const closeAlbumModal = () => {
+  document.querySelector('.modal_2').classList.remove('active')
+}
+
+const createAlbum = async () => {
+  const capa = formAlbum.querySelector('#capa-album')
+  const titulo = formAlbum.querySelector('#titulo-album')
+
+  const album = new Album(capa, titulo,)
+}
 
 
 //================
@@ -368,9 +389,6 @@ player.addEventListener('timeupdate', atualizarBarra)
 
 document.querySelector('#criarAlbum')
   .addEventListener('click', openAlbumModal)
-
-
-
 
 
 
