@@ -1,4 +1,4 @@
-const formulario = document.querySelector('form')
+const formulario = document.querySelector('.form-musica')
 const btnEnviar = document.querySelector('#enviar-musica')
 const btnCancel = document.querySelector('#cancelar-musica')
 const tbody = document.querySelector("tbody");
@@ -97,8 +97,8 @@ const criarLinha = async () => {
     <td>${musica.autor}</td>
     <td>${formatarDuracao(duracao)}</td>
     <td>
-      <button type="button" id="edit-${index}"><i class="bx bxs-pencil"></i></button>
-      <button type="button" id="delete-${index}"><i class="bx bxs-trash-alt"></i></button>
+      <button type="button" id="edit-${index}"><i id="edit-${index}" class="bx bxs-pencil"></i></button>
+      <button type="button" id="delete-${index}"><i id="delete-${index}" class="bx bxs-trash-alt"></i></button>
     </td>
     `
     tbody.appendChild(newRow);
@@ -115,12 +115,12 @@ const limparTabela = () => {
 }
 
 const playEditDelete = async (event) => {
-  if (event.target.type == 'button') {
+  if (event.target.type == 'button' || event.target.tagName  == 'I') {
     const [action, indexStr] = event.target.id.split('-')
     const index = Number(indexStr)
     const btnPress = tbody.querySelector(`#play-${index}`)
     if (action == 'edit') {
-      alert('depois resolvo this') // RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      await editarMusica(index)
       return
     }
     if (action == 'delete') {
@@ -149,6 +149,26 @@ const playEditDelete = async (event) => {
   }
 }
 
+const editarMusica = async (index) => {
+  const musicas_db = await getIndexedDB()
+  const musica = musicas_db[index]
+  openModal()
+  await preencherCampos(musica)
+  
+  await updateMusica(index, musica)
+  formulario.reset()
+  await criarLinha()
+  await updateTabela()
+  closeModal()
+}
+
+const preencherCampos = async (musica) => {
+  formulario.querySelector('#arquivo').required = false
+  formulario.querySelector('#title').value = musica.titulo
+  formulario.querySelector('#autor').value = musica.autor
+  formulario.querySelector('#genero').value = musica.genero
+} 
+
 // A partir daqui é o player
 
 const chamarPlayer = async (action, index) => {
@@ -161,7 +181,7 @@ const chamarPlayer = async (action, index) => {
     musicName.textContent = musica.titulo
     player.src = audioURL
     spanIndex.id = index
-    await player.play()
+    player.play()
     btnPress.textContent = '⏸'
     iconPlayPause.className = 'bx bx-pause'
   }
@@ -171,7 +191,7 @@ const chamarPlayer = async (action, index) => {
     iconPlayPause.className = 'bx bx-play'
   }
   if (action == 'continue') {
-    await player.play()
+    player.play()
     btnPress.textContent = '⏸'
     iconPlayPause.className = 'bx bx-pause'
   }
@@ -201,13 +221,13 @@ const PlayPause = async () => {
   if (spanIndex.id != -1) {
     if (player.paused) {
       const btnPress = tbody.querySelector(`#play-${spanIndex.id}`)
-      await player.play()
+      player.play()
       iconPlayPause.className = 'bx bx-pause'
       btnPress.textContent = '⏸'
       return
     }
     pausarTudo()
-    await player.pause()
+    player.pause()
     iconPlayPause.className = 'bx bx-play'
   }
 }
