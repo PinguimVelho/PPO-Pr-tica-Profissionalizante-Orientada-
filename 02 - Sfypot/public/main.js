@@ -1,15 +1,28 @@
 const formulario = document.querySelector('form')
-const btn = document.querySelector('#enviar-musica')
+const btnEnviar = document.querySelector('#enviar-musica')
 const btnCancel = document.querySelector('#cancelar-musica')
 const tbody = document.querySelector("tbody");
 
 const classPlayer = document.querySelector('.player')
+const spanIndex = classPlayer.querySelector('.indexMusica')
 const player = classPlayer.querySelector('#audioPlayer')
-const botaoNext = classPlayer.querySelector('#botaoNext')
-const botaoPlayPause = classPlayer.querySelector('#botaoPlayPause')
-const botaoBack = classPlayer.querySelector('#botaoBack')
 
-const audioTocando = false
+const botaoBack = classPlayer.querySelector('#botaoBack')
+const iconBack = botaoBack.querySelector('i')
+
+const botaoPlayPause = classPlayer.querySelector('#botaoPlayPause')
+const iconPlayPause = botaoPlayPause.querySelector('i')
+
+const botaoNext = classPlayer.querySelector('#botaoNext')
+const iconNext = document.querySelector('i')
+
+let audioTocando = false
+
+// ============
+// Espaço teste
+
+// ============
+
 
 class Musica {
   constructor(mp3, titulo, autor, genero) {
@@ -51,6 +64,7 @@ const salvarMusica = async () => {
   formulario.reset()
   await criarLinha()
   await updateTabela()
+  closeModal()
   }
 }
 
@@ -74,16 +88,15 @@ const criarLinha = async () => {
 
     const newRow = document.createElement('tr')
     newRow.innerHTML = `
-    <td><button type="button" id="play-${index}-${audioURL}">▶</button>
+    <td><button class="playPorMusica" type="button" id="play-${index}">▶</button>
     <td>${musica.titulo}</td>
     <td>${musica.autor}</td>
     <td>${formatarDuracao(duracao)}</td>
     <td>
-      <button type="button" id="edit-${index}">Editar</button>
-      <button type="button" id="delete-${index}">Apagar</button>
+      <button type="button" id="edit-${index}"><i class="bx bxs-pencil"></i></button>
+      <button type="button" id="delete-${index}"><i class="bx bxs-trash-alt"></i></button>
     </td>
     `
-
     tbody.appendChild(newRow);
   }
 }
@@ -99,8 +112,9 @@ const limparTabela = () => {
 
 const playEditDelete = async (event) => {
   if (event.target.type == 'button') {
-    const [action, indexStr, audioURL] = event.target.id.split('-')
+    const [action, indexStr] = event.target.id.split('-')
     const index = Number(indexStr)
+    const btnPress = tbody.querySelector(`#play-${index}`)
     if (action == 'edit') {
       alert('depois resolvo this') // RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE RESOLVE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       return
@@ -115,24 +129,69 @@ const playEditDelete = async (event) => {
       return
     }
     if (action == 'play') {
-      const botao = tbody.querySelector(`#play-${index}-${audioURL}`)
-
-      if (audioTocando == false) {
-        chamarPlayer(audioURL);
+      player.addEventListener('ended', () => {
+        btnPress.textContent = '▶'
+        iconPlayPause.className = 'bx bx-play'
+      })
+      if (player.paused && spanIndex.id == index) {
+        await chamarPlayer('continue', index)
         return
       }
-      chamarPlayer(false)
+      if (player.paused || spanIndex.id != index) {
+        await chamarPlayer('play', index);
+        return
+      }
+      if (!player.paused && spanIndex.id == index ) {
+        await chamarPlayer('pause', index)
+        return
+      }
     }
   }
 }
 
 // Funções usadas em funções ////////////////////
 
+const chamarPlayer = async (action, index) => {
+  const musicas_db = await getIndexedDB()
+  const musica = musicas_db[index]
+  const audioURL = URL.createObjectURL(musica.mp3)
+  const btnPress = tbody.querySelector(`#play-${index}`)
+  const botoesPlay = document.querySelectorAll('.playPorMusica')
+  botoesPlay.forEach(button => {
+    button.textContent = '▶'
+  });
+  if (action == 'play') {
+    player.src = audioURL
+    spanIndex.id = index
+    await player.play()
+    btnPress.textContent = '⏸'
+    iconPlayPause.className = 'bx bx-pause'
+  }
+  if (action == 'pause') {
+    player.pause()
+    btnPress.textContent = '▶'
+    iconPlayPause.className = 'bx bx-play'
+  }
+  if (action == 'continue') {
+    await player.play()
+    btnPress.textContent = '⏸'
+    iconPlayPause.className = 'bx bx-pause'
+  }
+}
+
 const camposValidos = () => formulario.reportValidity()
 
-const chamarPlayer = (SRC) => {
-  player.src = SRC
+// =======================================
+// Modal
+// =======================================
+
+const openModal = () => document.querySelector('.modal').classList.add('active');
+
+const closeModal = () => {
+    document.querySelector('.modal').classList.remove('active')
 }
+
+
 
 //================
 // Indexed DB
@@ -181,15 +240,6 @@ const setIndexedDB = async (musicas_db) => {
     request.onerror = () => reject(request.error)
   })
 }
-// =======================================
-// Modal
-// =======================================
-
-const openModal = () => document.querySelector('.modal').classList.add('active');
-
-const closeModal = () => {
-    document.querySelector('.modal').classList.remove('active')
-}
 
 //================
 // Eventos
@@ -201,8 +251,7 @@ document.querySelector('#cadastrarMusica')
 document.querySelector('#cancelMusica')
     .addEventListener('click', closeModal);
 
-btn.addEventListener('click', salvarMusica);
-// btnCancel.addEventListener('click' () => {})
+btnEnviar.addEventListener('click', salvarMusica);
 
 document.querySelector('html')
   .addEventListener('load', updateTabela());
