@@ -16,10 +16,10 @@ const iconPlayPause = botaoPlayPause.querySelector('i')
 const botaoNext = classPlayer.querySelector('#botaoNext')
 const iconNext = document.querySelector('i')
 
-let audioTocando = false
 
 // ============
 // Espaço teste
+
 
 // ============
 
@@ -27,7 +27,7 @@ let audioTocando = false
 class Musica {
   constructor(mp3, titulo, autor, genero) {
     this.mp3 = mp3
-    this.titulo = titulo; 
+    this.titulo = titulo;
     this.autor = autor;
     this.genero = genero;
   }
@@ -54,29 +54,29 @@ const deleteMusica = async (index) => {
 ////////////////////////////////////
 
 const salvarMusica = async () => {
- if (camposValidos()){  
-  const arquivo = formulario.querySelector('#arquivo').files[0]
-  const titulo = formulario.querySelector('#title').value
-  const autor = formulario.querySelector('#autor').value
-  const genero = formulario.querySelector('#genero').value
-  
-  await createMusica(new Musica( arquivo, titulo.trim(), autor.trim(), genero.trim()))
-  formulario.reset()
-  await criarLinha()
-  await updateTabela()
-  closeModal()
+  if (camposValidos()) {
+    const arquivo = formulario.querySelector('#arquivo').files[0]
+    const titulo = formulario.querySelector('#title').value
+    const autor = formulario.querySelector('#autor').value
+    const genero = formulario.querySelector('#genero').value
+
+    await createMusica(new Musica(arquivo, titulo.trim(), autor.trim(), genero.trim()))
+    formulario.reset()
+    await criarLinha()
+    await updateTabela()
+    closeModal()
   }
 }
 
 const formatarDuracao = (segundos) => {
-    const min = Math.floor(segundos / 60);
-    const seg = Math.floor(segundos % 60);
-    return `${min}:${seg.toString().padStart(2, "0")}`;
+  const min = Math.floor(segundos / 60);
+  const seg = Math.floor(segundos % 60);
+  return `${min}:${seg.toString().padStart(2, "0")}`;
 }
 
 const criarLinha = async () => {
   const musicas_db = await getIndexedDB()
-  for (let index = 0; index < musicas_db.length; index++) { 
+  for (let index = 0; index < musicas_db.length; index++) {
     const musica = musicas_db[index];
     const audioURL = URL.createObjectURL(musica.mp3)
     const audio = new Audio(audioURL)
@@ -107,7 +107,7 @@ const updateTabela = async () => {
 }
 
 const limparTabela = () => {
-    tbody.innerHTML = '';
+  tbody.innerHTML = '';
 }
 
 const playEditDelete = async (event) => {
@@ -124,15 +124,11 @@ const playEditDelete = async (event) => {
       const response = confirm(`Deseja mesmo excluir a música ${musicas_db[index].titulo}?`)
       if (response == true) {
         await deleteMusica(index)
-        await updateTabela()    
+        await updateTabela()
       }
       return
     }
     if (action == 'play') {
-      player.addEventListener('ended', () => {
-        btnPress.textContent = '▶'
-        iconPlayPause.className = 'bx bx-play'
-      })
       if (player.paused && spanIndex.id == index) {
         await chamarPlayer('continue', index)
         return
@@ -141,7 +137,7 @@ const playEditDelete = async (event) => {
         await chamarPlayer('play', index);
         return
       }
-      if (!player.paused && spanIndex.id == index ) {
+      if (!player.paused && spanIndex.id == index) {
         await chamarPlayer('pause', index)
         return
       }
@@ -149,17 +145,14 @@ const playEditDelete = async (event) => {
   }
 }
 
-// Funções usadas em funções ////////////////////
+// A partir daqui é o player
 
 const chamarPlayer = async (action, index) => {
   const musicas_db = await getIndexedDB()
   const musica = musicas_db[index]
   const audioURL = URL.createObjectURL(musica.mp3)
   const btnPress = tbody.querySelector(`#play-${index}`)
-  const botoesPlay = document.querySelectorAll('.playPorMusica')
-  botoesPlay.forEach(button => {
-    button.textContent = '▶'
-  });
+  pausarTudo()
   if (action == 'play') {
     player.src = audioURL
     spanIndex.id = index
@@ -179,7 +172,49 @@ const chamarPlayer = async (action, index) => {
   }
 }
 
+const pausarTudo = () => {
+  const botoesPlay = document.querySelectorAll('.playPorMusica')
+  botoesPlay.forEach(button => {
+    button.textContent = '▶'
+  });
+}
+
 const camposValidos = () => formulario.reportValidity()
+
+// =======================================
+// Barra do Player
+// =======================================
+
+const Back = async () => {
+  if (spanIndex.id > 0) {
+    const newIndex =  Number(spanIndex.id)- 1
+    await chamarPlayer('play', newIndex)
+  }
+}
+
+const PlayPause = async () => {
+  if (spanIndex.id != -1) {
+    if (player.paused) {
+      const btnPress = tbody.querySelector(`#play-${spanIndex.id}`)
+      await player.play()
+      iconPlayPause.className = 'bx bx-pause'
+      btnPress.textContent = '⏸'
+      return
+    }
+    pausarTudo()
+    await player.pause()
+    iconPlayPause.className = 'bx bx-play'
+  }
+}
+
+const Next = async () => {
+  const musicas_db = await getIndexedDB()
+  if (spanIndex.id < (musicas_db.length) - 1) {
+    const newIndex =  Number(spanIndex.id) + 1;
+    
+    await chamarPlayer('play', newIndex)
+  }
+}
 
 // =======================================
 // Modal
@@ -188,7 +223,7 @@ const camposValidos = () => formulario.reportValidity()
 const openModal = () => document.querySelector('.modal').classList.add('active');
 
 const closeModal = () => {
-    document.querySelector('.modal').classList.remove('active')
+  document.querySelector('.modal').classList.remove('active')
 }
 
 
@@ -245,15 +280,25 @@ const setIndexedDB = async (musicas_db) => {
 // Eventos
 // ===============
 
-document.querySelector('#cadastrarMusica')
-    .addEventListener('click', openModal);
+document.querySelector('#cadastrarMusica') // Abrir o modal
+  .addEventListener('click', openModal);
 
-document.querySelector('#cancelMusica')
-    .addEventListener('click', closeModal);
+document.querySelector('#cancelMusica')    // Fechar o modal
+  .addEventListener('click', closeModal);
 
-btnEnviar.addEventListener('click', salvarMusica);
+btnEnviar.addEventListener('click', salvarMusica); // salvar a musicakk
 
-document.querySelector('html')
+document.querySelector('html')                    // atualizar a tabela logo q abre o código
   .addEventListener('load', updateTabela());
 
-tbody.addEventListener('click', playEditDelete);
+tbody.addEventListener('click', playEditDelete);  // funções de play edit e delete de cada música
+
+player.addEventListener('ended', () => {
+        pausarTudo
+        iconPlayPause.className = 'bx bx-play'
+      })
+
+//eventos do player
+botaoBack.addEventListener('click', Back)
+botaoPlayPause.addEventListener('click', PlayPause)
+botaoNext.addEventListener('click', Next)
