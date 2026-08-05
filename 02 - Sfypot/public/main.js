@@ -6,6 +6,7 @@ const dataIndex_modal = formulario.querySelector('#title')
 
 const classPlayer = document.querySelector('.player')
 const musicName = classPlayer.querySelector('#musicName')
+const musicAutor = classPlayer.querySelector('#musicAutor')
 const spanIndex = classPlayer.querySelector('.indexMusica')
 const player = classPlayer.querySelector('#audioPlayer')
 
@@ -74,6 +75,7 @@ const salvarMusica = async () => {
       await updateMusica(index, new Musica(arquivo, titulo.trim(), autor.trim(), genero.trim()))
     }
     formulario.reset()
+    limparTabela()
     await criarLinha()
     updateTabela()
     closeModal()
@@ -122,6 +124,10 @@ const updateTabela = async () => {
 const limparTabela = () => {
   tbody.innerHTML = '';
 }
+
+// =======================================
+// Acões da musica
+// =======================================
 
 const playEditDelete = async (event) => {
   if (event.target.type == 'button' || event.target.tagName == 'I') {
@@ -174,7 +180,9 @@ const actionEdit = async (index) => {
 }
 
 const preencherCampos = async (musica) => {
-  formulario.querySelector('#arquivo').required = false
+  const dt = new DataTransfer();
+  dt.items.add(musica.mp3)
+  formulario.querySelector('#arquivo').files = dt.files
   formulario.querySelector('#title').value = musica.titulo
   formulario.querySelector('#autor').value = musica.autor
   formulario.querySelector('#genero').value = musica.genero
@@ -190,6 +198,7 @@ const chamarPlayer = async (action, index) => {
   pausarTudo()
   if (action == 'play') {
     musicName.textContent = musica.titulo
+    musicAutor.textContent = musica.autor
     player.src = audioURL
     spanIndex.id = index
     player.play()
@@ -218,7 +227,7 @@ const pausarTudo = () => {
 const camposValidos = () => formulario.reportValidity()
 
 // =======================================
-// Barra do Player
+// Botões do Player
 // =======================================
 
 const Back = async () => {
@@ -319,6 +328,13 @@ const setIndexedDB = async (musicas_db) => {
   })
 }
 
+// ========================================================
+// Criar Albuns 🌟
+// ========================================================
+
+const openAlbumModal
+
+
 //================
 // Eventos
 // ===============
@@ -327,7 +343,10 @@ document.querySelector('#cadastrarMusica') // Abrir o modal
   .addEventListener('click', openModal);
 
 document.querySelector('#cancelMusica')    // Fechar o modal
-  .addEventListener('click', closeModal);
+  .addEventListener('click', () => {
+    closeModal()
+    dataIndex_modal.dataset.index = '-1'
+  }) ;
 
 btnEnviar.addEventListener('click', salvarMusica); // salvar a musicakk
 
@@ -344,5 +363,17 @@ botaoPlayPause.addEventListener('click', PlayPause)
 botaoNext.addEventListener('click', Next)
 
 player.addEventListener('timeupdate', atualizarBarra)
+
+// CRIAR ÁLBUMM
+
+document.querySelector('#criarAlbum')
+  .addEventListener('click', openAlbumModal)
+
+
+
+
+
+
+
 
 updateTabela()

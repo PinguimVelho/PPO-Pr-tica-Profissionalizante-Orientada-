@@ -12,12 +12,12 @@
 
 <body>
 
-    <h1>Sfypot</h1>
+    <h1>SFYPOT</h1>
 
     <button type="button" id="cadastrarMusica">Cadastrar Música</button>
     <button type="button" id="criarAlbum">Criar Álbum</button>
 
-    <h2>Lista de Músicas:</h2>
+    <h2>Biblioteca:</h2>
     <table id="list-musicas">
 
         <thead>
@@ -34,7 +34,10 @@
     </table>
 
     <div class="player"> <!--  PLAYER -->
-        <span id="musicName"></span>
+        <div class="music-info">
+            <span id="musicName"></span>
+            <span id="musicAutor"></span>
+        </div>
         <span id="-1" class="indexMusica"></span>
         <audio id="audioPlayer" src=""></audio>
         <div class="controls">
