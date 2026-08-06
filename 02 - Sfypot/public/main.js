@@ -1,6 +1,6 @@
 const formulario = document.querySelector('.form-musica')
 const btnEnviar = document.querySelector('#enviar-musica')
-const btnCancel = document.querySelector('#cancelar-musica')
+const btnCancel = document.querySelector('#cancelMusica')
 const tbody = document.querySelector("tbody");
 const dataIndex_modal = formulario.querySelector('#title')
 
@@ -284,8 +284,10 @@ const atualizarBarra = () => {
 // Modal
 // =======================================
 
-const openModal = () => document.querySelector('.modal').classList.add('active');
-
+const openModal = () => {
+  document.querySelector('.modal').classList.add('active');
+  closeAlbumModal()
+}
 const closeModal = () => {
   document.querySelector('.modal').classList.remove('active')
 }
@@ -342,7 +344,10 @@ const setIndexedDB = async (musicas_db) => {
 // Criar Albuns 🌟
 // ========================================================
 
-const openAlbumModal = () => document.querySelector('.modal_2').classList.add('active');
+const openAlbumModal = () => {
+  document.querySelector('.modal_2').classList.add('active');
+  closeModal()
+}
 
 const closeAlbumModal = () => {
   document.querySelector('.modal_2').classList.remove('active')
@@ -390,8 +395,10 @@ player.addEventListener('timeupdate', atualizarBarra)
 document.querySelector('#criarAlbum')
   .addEventListener('click', openAlbumModal)
 
-
-
-
+document.querySelector('#cancel-album')    // Fechar o modal
+  .addEventListener('click', () => {
+    closeAlbumModal()
+    dataIndex_modal.dataset.index = '-1'
+  });
 
 updateTabela()
