@@ -371,7 +371,8 @@ document.querySelector('#cadastrarMusica') // Abrir o modal
 document.querySelector('#cancelMusica')    // Fechar o modal
   .addEventListener('click', () => {
     closeModal()
-    dataIndex_modal.dataset.index = '-1'
+    formulario.reset()
+    dataIndex_modal.dataset.index = 'new'
   }) ;
 
 btnEnviar.addEventListener('click', salvarMusica); // salvar a musicakk
