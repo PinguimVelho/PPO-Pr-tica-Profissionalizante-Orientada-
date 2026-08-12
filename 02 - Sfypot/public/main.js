@@ -399,7 +399,8 @@ document.querySelector('#criarAlbum')
 document.querySelector('#cancel-album')    // Fechar o modal
   .addEventListener('click', () => {
     closeAlbumModal()
-    dataIndex_modal.dataset.index = '-1'
+    formAlbum.reset()
+    dataIndex_modal.dataset.index = 'new'
   });
 
 updateTabela()
