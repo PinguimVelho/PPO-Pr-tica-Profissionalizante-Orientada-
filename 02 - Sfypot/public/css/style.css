@@ -1,285 +1,609 @@
-/* ===========================
-   GERAL
-=========================== */
+/* =========================================================
+   RESET
+========================================================= */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Segoe UI, sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
-body{
-    background:#121212;
-    color:#fff;
-    padding:40px;
-    padding-bottom:170px;
+:root {
+    --bg: #0d0d0f;
+    --bg-secondary: #151518;
+    --bg-card: #1b1b20;
+    --bg-hover: #24242b;
+
+    --purple: #8b5cf6;
+    --purple-light: #a77cff;
+    --purple-dark: #6d3fd4;
+
+    --text: #ffffff;
+    --text-secondary: #aaaab4;
+    --text-muted: #777780;
+
+    --border: #2b2b32;
+    --danger: #ef4444;
+    --danger-dark: #b91c1c;
+
+    --radius: 14px;
+    --transition: 0.2s ease;
 }
 
-/* ===========================
+/* =========================================================
+   BODY
+========================================================= */
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(139, 92, 246, 0.10),
+            transparent 30%
+        ),
+        var(--bg);
+
+    color: var(--text);
+
+    padding: 40px;
+    padding-bottom: 180px;
+}
+
+/* =========================================================
    TÍTULOS
-=========================== */
+========================================================= */
 
-h1{
-    color:#9b5cff;
-    font-size:42px;
-    margin-bottom:25px;
+h1 {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1px;
+
+    margin-bottom: 28px;
+
+    background: linear-gradient(
+        135deg,
+        #ffffff,
+        var(--purple-light)
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-h2{
-    margin:30px 0 15px;
-    color:#ddd;
+h2 {
+    margin: 38px 0 16px;
+
+    font-size: 22px;
+    font-weight: 600;
+
+    color: #e5e5ea;
 }
 
-/* ===========================
-   BOTÃO CADASTRAR
-=========================== */
+/* =========================================================
+   BOTÕES PRINCIPAIS
+========================================================= */
 
-#cadastrarMusica{
-    background:#8B5CF6;
-    color:white;
-    border:none;
-    border-radius:30px;
-    padding:14px 26px;
-    font-size:16px;
-    cursor:pointer;
-    transition:.25s;
-    font-weight:bold;
+#cadastrarMusica,
+#criarAlbum {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    background: linear-gradient(
+        135deg,
+        var(--purple),
+        var(--purple-dark)
+    );
+
+    color: white;
+
+    border-radius: 12px;
+
+    padding: 13px 22px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform var(--transition),
+        box-shadow var(--transition),
+        filter var(--transition);
+
+    margin-right: 8px;
 }
 
-#cadastrarMusica:hover{
-    background:#9f75ff;
-    transform:scale(1.04);
-}
-/* ===========================
-   BOTÃO DO ÁLBUM
-=========================== */
+#cadastrarMusica:hover,
+#criarAlbum:hover {
+    transform: translateY(-2px);
 
-#criarAlbum{
-    background:#8B5CF6;
-    color:white;
-    border:none;
-    border-radius:30px;
-    padding:14px 26px;
-    font-size:16px;
-    cursor:pointer;
-    transition:.25s;
-    font-weight:bold;
+    filter: brightness(1.08);
+
+    box-shadow:
+        0 8px 25px rgba(139, 92, 246, 0.25);
 }
 
-#criarAlbum:hover{
-    background:#9f75ff;
-    transform:scale(1.04);
+#cadastrarMusica:active,
+#criarAlbum:active {
+    transform: translateY(0);
 }
 
-/* ===========================
+/* =========================================================
    TABELA
-=========================== */
+========================================================= */
 
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:#1b1b1b;
-    border-radius:15px;
-    overflow:hidden;
-    margin-top:20px;
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    overflow: hidden;
+    margin-top: 20px;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.18);
 }
 
-thead{
-    background:#2b174b;
+/* Aproxima a coluna da música do botão de play */
+
+thead th:first-child,
+tbody td:first-child {
+    width: 45px;
 }
 
-thead th{
-    padding:18px;
-    text-align:left;
-    color:#ddd;
+thead th:nth-child(2),
+tbody td:nth-child(2) {
+    width: 250px;
 }
 
-tbody tr{
-    transition:.2s;
+/* Cabeçalho */
+
+thead {
+    background: #202027;
 }
 
-tbody tr:hover{
-    background:#242424;
+thead th {
+    padding: 17px 18px;
+
+    text-align: left;
+
+    color: #bdbdc8;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    border-bottom: 1px solid var(--border);
 }
 
-tbody td{
-    padding:16px;
-    border-bottom:1px solid #2e2e2e;
+/* Linhas */
+
+tbody tr {
+    transition:
+        background var(--transition),
+        transform var(--transition);
 }
 
-/* ===========================
+tbody tr:hover {
+    background: var(--bg-hover);
+}
+
+tbody td {
+    padding: 15px 18px;
+
+    color: #e7e7eb;
+
+    border-bottom: 1px solid #26262d;
+}
+
+/* Última linha */
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* =========================================================
    BOTÕES DA TABELA
-=========================== */
+========================================================= */
 
-tbody button{
-    border:none;
-    border-radius:20px;
-    cursor:pointer;
-    transition:.2s;
-    font-weight:bold;
+tbody button {
+    border: none;
+
+    cursor: pointer;
+
+    transition:
+        transform var(--transition),
+        background var(--transition),
+        color var(--transition);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-button[id^="play"]{
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    background:#8B5CF6;
-    color:white;
-    font-size:16px;
+/* Play */
+
+button[id^="play"] {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    background: var(--purple);
+    color: white;
+
+    font-size: 17px;
 }
 
-button[id^="play"]:hover{
-    background:#a77cff;
+button[id^="play"]:hover {
+    background: var(--purple-light);
+
+    transform: scale(1.08);
+
+    box-shadow:
+        0 5px 15px rgba(139, 92, 246, 0.3);
 }
 
-button[id^="edit"]{
-    background:#3b2b57;
-    color:white;
-    padding:8px 14px;
-    margin-right:8px;
+/* Editar */
+
+button[id^="edit"] {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 9px;
+
+    background: rgba(139, 92, 246, 0.12);
+    color: #b994ff;
+
+    padding: 0;
+
+    margin-right: 6px;
 }
 
-button[id^="edit"]:hover{
-    background:#4f3c73;
+button[id^="edit"]:hover {
+    background: rgba(139, 92, 246, 0.25);
+
+    color: white;
+
+    transform: translateY(-2px);
 }
 
-button[id^="delete"]{
-    background:#7b2020;
-    color:white;
-    padding:8px 14px;
+/* Excluir */
+
+button[id^="delete"] {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 9px;
+
+    background: rgba(239, 68, 68, 0.10);
+    color: #f87171;
+
+    padding: 0;
 }
 
-button[id^="delete"]:hover{
-    background:#a52b2b;
+button[id^="delete"]:hover {
+    background: rgba(239, 68, 68, 0.20);
+
+    color: #ff8a8a;
+
+    transform: translateY(-2px);
 }
 
-/* ===========================
+/* =========================================================
    PLAYER
-=========================== */
+========================================================= */
 
-.player{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
+.player {
+    position: fixed;
 
-    background:#181818;
-    border-top:2px solid #8B5CF6;
+    left: 0;
+    bottom: 0;
 
-    padding:15px 30px;
+    width: 100%;
 
-    display:flex;
-    flex-direction:column;
-    align-items:center;
+    min-height: 135px;
 
-    gap:12px;
+    padding: 18px 30px;
 
-    z-index:999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-    position:fixed;
+    gap: 10px;
+
+    background: rgba(20, 20, 24, 0.94);
+
+    border-top: 1px solid rgba(139, 92, 246, 0.35);
+
+    box-shadow:
+        0 -10px 35px rgba(0, 0, 0, 0.35);
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    z-index: 999;
 }
 
-.music-info{
-    position:absolute;
-    left:30px;
-    top:50%;
-    transform:translateY(-50%);
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-    max-width:250px;
+/* =========================================================
+   INFORMAÇÕES DA MÚSICA
+========================================================= */
+
+.music-info {
+    position: absolute;
+
+    left: 30px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    width: 250px;
 }
 
-#musicName{
-    font-size:18px;
-    font-weight:bold;
-    color:#fff;
+#musicName {
+    color: white;
+    font-size: 19px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-#musicAutor{
-    font-size:14px;
-    color:#bdbdbd;
+#musicAutor {
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.music-info span{
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+.music-info span {
+    display: block;
 }
 
-.controls{
-    display:flex;
-    gap:20px;
+/* =========================================================
+   CONTROLES
+========================================================= */
+
+.controls {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
 }
 
-.controls button{
-    width:40px;
-    height:40px;
+.controls button {
+    width: 40px;
+    height: 40px;
 
-    border:none;
-    border-radius:50%;
+    border: none;
+    border-radius: 50%;
 
-    background:#8B5CF6;
-    color:white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    cursor:pointer;
+    background: #29292f;
+    color: #ddd;
 
-    transition:.2s;
+    cursor: pointer;
 
-    font-size:25px;
+    font-size: 23px;
+
+    transition:
+        transform var(--transition),
+        background var(--transition),
+        color var(--transition);
 }
 
-.controls button:hover{
-    transform:scale(1.1);
-    background:#a77cff;
+.controls button:hover {
+    background: #38383f;
+
+    color: white;
+
+    transform: scale(1.08);
 }
 
-.footer{
-    width:100%;
-    max-width:700px;
+/* Play/Pause principal */
+
+#botaoPlayPause {
+    width: 48px;
+    height: 48px;
+
+    background: white;
+    color: #111;
+
+    font-size: 27px;
 }
 
-/* ===========================
-   BARRA DE PROGRESSO
-=========================== */
+#botaoPlayPause:hover {
+    background: #eeeeee;
 
-.progress-bar{
-    width:100%;
-    height:4px;
-    background:#3b3b3b;
-    border-radius:999px;
-    overflow:hidden;
+    transform: scale(1.08);
 }
 
-.progress{
-    width:0%;
-    height:100%;
-    background:#9b5cff;
-    border-radius:999px;
+/* =========================================================
+   PROGRESSO
+========================================================= */
+
+.footer {
+    width: 100%;
+    max-width: 700px;
 }
 
-.time{
-    display:flex;
-    justify-content:space-between;
-    margin-top:8px;
-    color:#bdbdbd;
-    font-size:14px;
+.progress-bar {
+    width: 100%;
+    height: 5px;
+
+    background: #34343b;
+
+    border-radius: 999px;
+
+    overflow: hidden;
+
+    cursor: pointer;
 }
 
-/* ===========================
-   SCROLL
-=========================== */
+.progress {
+    width: 0%;
+    height: 100%;
 
-::-webkit-scrollbar{
-    width:10px;
+    background: linear-gradient(
+        90deg,
+        var(--purple-dark),
+        var(--purple-light)
+    );
+
+    border-radius: 999px;
+
+    transition: width 0.1s linear;
 }
 
-::-webkit-scrollbar-thumb{
-    background:#8B5CF6;
-    border-radius:20px;
+/* =========================================================
+   TEMPO
+========================================================= */
+
+.time {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 7px;
+
+    color: var(--text-muted);
+
+    font-size: 12px;
 }
 
-::-webkit-scrollbar-track{
-    background:#1a1a1a;
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+    width: 9px;
 }
+
+::-webkit-scrollbar-track {
+    background: #101014;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3d2b5f;
+
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--purple);
+}
+
+/* =========================================================
+   SELEÇÃO
+========================================================= */
+
+::selection {
+    background: rgba(139, 92, 246, 0.35);
+    color: white;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    body {
+        padding: 25px 20px;
+        padding-bottom: 190px;
+    }
+
+    h1 {
+        font-size: 34px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .player {
+        min-height: 155px;
+
+        padding:
+            15px
+            20px
+            12px;
+    }
+
+    .music-info {
+        position: static;
+
+        transform: none;
+
+        width: 100%;
+
+        text-align: center;
+
+        align-items: center;
+
+        order: 1;
+    }
+
+    .controls {
+        order: 2;
+    }
+
+    .footer {
+        order: 3;
+    }
+}
+
+@media (max-width: 500px) {
+
+    body {
+        padding: 20px 15px;
+        padding-bottom: 200px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    #cadastrarMusica,
+    #criarAlbum {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    h2 {
+        font-size: 19px;
+    }
+
+    .player {
+        min-height: 175px;
+    }
+
+    .music-info {
+        max-width: 90%;
+    }
+}
+
