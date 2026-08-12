@@ -292,6 +292,7 @@ const closeModal = () => {
   document.querySelector('.modal').classList.remove('active')
 }
 
+
 //================
 // Indexed DB
 // ===============
@@ -340,6 +341,10 @@ const setIndexedDB = async (musicas_db) => {
   })
 }
 
+const getLocalStorage = () => JSON.parse(localStorage.getItem('albuns_db'))
+
+const setLocalStorage = (array) => localStorage.setItem('albuns_db', JSON.stringify(array))
+
 // ========================================================
 // Criar Albuns 🌟
 // ========================================================
@@ -353,11 +358,30 @@ const closeAlbumModal = () => {
   document.querySelector('.modal_2').classList.remove('active')
 }
 
-const createAlbum = async () => {
+const salvarAlbum = () => {
   const capa = formAlbum.querySelector('#capa-album')
   const titulo = formAlbum.querySelector('#titulo-album')
+  const musicas = []
 
-  const album = new Album(capa, titulo,)
+  createAlbum(new Album(capa, titulo, [1,,3]))
+}
+
+const createAlbum = (album) => {
+  const albuns_db = getLocalStorage()
+  albuns_db.push(album)
+  setLocalStorage(albuns_db)
+}
+
+const updateAlbum = (index, updMusica) => {
+  const albuns_db = getLocalStorage()
+  albuns_db[index] = updMusica
+  setLocalStorage(albuns_db)
+}
+
+const deleteAlbum = (index) => {
+  const albuns_db = getLocalStorage()
+  albuns_db.splice(index, 1)
+  setLocalStorage(albuns_db)
 }
 
 
@@ -402,5 +426,10 @@ document.querySelector('#cancel-album')    // Fechar o modal
     formAlbum.reset()
     dataIndex_modal.dataset.index = 'new'
   });
+
+btnCriarAlbum.addEventListener('click', salvarAlbum)
+
+
+
 
 updateTabela()
