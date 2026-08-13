@@ -28,15 +28,15 @@ const duracaoPlayer = document.querySelector("#duracao")
 const formAlbum = document.querySelector(".form-album");
 const btnCriarAlbum = document.querySelector("#enviar-album");
 const btnCancelarAlbum = document.querySelector("#cancel-album");
-
+const selectMusicas = document.querySelector("#selectMusicas");
 
 
 class Album {
-    constructor(capa, titulo, musicas=[]) {
-        this.capa = capa;
-        this.titulo = titulo;
-        this.musicas = musicas;
-    }
+  constructor(capa, titulo, musicas = []) {
+    this.capa = capa;
+    this.titulo = titulo;
+    this.musicas = musicas;
+  }
 }
 
 class Musica {
@@ -76,7 +76,7 @@ const salvarMusica = async () => {
     const autor = formulario.querySelector('#autor').value
     const genero = formulario.querySelector('#genero').value
 
-    
+
     if (dataIndex_modal.dataset.index == 'new') {
       await createMusica(new Musica(arquivo, titulo.trim(), autor.trim(), genero.trim()))
     }
@@ -341,7 +341,7 @@ const setIndexedDB = async (musicas_db) => {
   })
 }
 
-const getLocalStorage = () => JSON.parse(localStorage.getItem('albuns_db'))
+const getLocalStorage = () => JSON.parse(localStorage.getItem('albuns_db')) ?? []
 
 const setLocalStorage = (array) => localStorage.setItem('albuns_db', JSON.stringify(array))
 
@@ -351,19 +351,13 @@ const setLocalStorage = (array) => localStorage.setItem('albuns_db', JSON.string
 
 const openAlbumModal = () => {
   document.querySelector('.modal_2').classList.add('active');
+  limparSelect()
+  carregarSelect()
   closeModal()
 }
 
 const closeAlbumModal = () => {
   document.querySelector('.modal_2').classList.remove('active')
-}
-
-const salvarAlbum = () => {
-  const capa = formAlbum.querySelector('#capa-album')
-  const titulo = formAlbum.querySelector('#titulo-album')
-  const musicas = []
-
-  createAlbum(new Album(capa, titulo, [1,,3]))
 }
 
 const createAlbum = (album) => {
@@ -384,6 +378,40 @@ const deleteAlbum = (index) => {
   setLocalStorage(albuns_db)
 }
 
+const salvarAlbum = () => {
+  const capa = formAlbum.querySelector('#capa-album').files[0]
+  const reader = new FileReader()
+
+  const titulo = formAlbum.querySelector('#titulo-album').value
+  const musicas = []
+
+  reader.onload = () => { createAlbum(new Album(reader.result, titulo, [1, 3])) }
+  reader.readAsDataURL(capa)
+  closeAlbumModal()
+}
+
+const carregarSelect = async () => {
+  const musicas_db = await getIndexedDB()
+  musicas_db.forEach(musica => {
+
+    const label = document.createElement("label");
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.value = musica.titulo;
+
+    const span = document.createElement("span");
+    span.textContent = musica.titulo;
+
+    label.appendChild(input);
+    label.appendChild(span);
+
+    selectMusicas.appendChild(label);
+  });
+}
+
+const limparSelect = () => selectMusicas.innerHTML = '';
+
 
 //================
 // Eventos
@@ -397,7 +425,7 @@ document.querySelector('#cancelMusica')    // Fechar o modal
     closeModal()
     formulario.reset()
     dataIndex_modal.dataset.index = 'new'
-  }) ;
+  });
 
 btnEnviar.addEventListener('click', salvarMusica); // salvar a musicakk
 

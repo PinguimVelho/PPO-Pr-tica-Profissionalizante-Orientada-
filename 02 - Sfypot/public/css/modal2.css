@@ -228,3 +228,144 @@
 
     transform: translateY(-1px);
 }
+
+/* =========================================================
+   LISTA DE MÚSICAS DO ÁLBUM
+========================================================= */
+
+#selectMusicas {
+    width: 100%;
+    max-height: 180px;
+
+    padding: 6px;
+
+    background: #24242a;
+
+    border: 1px solid #303038;
+    border-radius: 10px;
+
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+/* Cada música */
+
+#selectMusicas label {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    color: #cfcfd6;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+#selectMusicas label:hover {
+    background: #303038;
+
+    color: white;
+}
+
+/* =========================================================
+   CHECKBOX
+========================================================= */
+
+#selectMusicas input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 5px;
+    height: 5px;
+
+    flex-shrink: 0;
+
+    border: 2px solid #5a5a64;
+    border-radius: 4px;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    position: relative;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+/* Checkbox selecionado */
+
+#selectMusicas input[type="checkbox"]:checked {
+    background: var(--purple);
+    border-color: var(--purple);
+}
+
+/* Check */
+
+#selectMusicas input[type="checkbox"]:checked::after {
+    content: "";
+
+    position: absolute;
+
+    width: 4px;
+    height: 8px;
+
+    left: 4px;
+    top: 1px;
+
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+
+    transform: rotate(45deg);
+}
+
+/* =========================================================
+   ITEM SELECIONADO
+========================================================= */
+
+#selectMusicas label:has(input[type="checkbox"]:checked) {
+    background: rgba(139, 92, 246, 0.15);
+
+    color: white;
+}
+
+#selectMusicas label:has(input[type="checkbox"]:checked):hover {
+    background: rgba(139, 92, 246, 0.22);
+}
+
+/* =========================================================
+   SCROLLBAR DA LISTA
+========================================================= */
+
+#selectMusicas::-webkit-scrollbar {
+    width: 6px;
+}
+
+#selectMusicas::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#selectMusicas::-webkit-scrollbar-thumb {
+    background: #45454f;
+
+    border-radius: 10px;
+}
+
+#selectMusicas::-webkit-scrollbar-thumb:hover {
+    background: var(--purple);
+}
