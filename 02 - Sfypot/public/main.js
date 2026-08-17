@@ -411,6 +411,7 @@ const criarLinhaAlbum = async () => {
     newRow.innerHTML = `
     <td><img src="${album.capa}"</td>
     <td>${album.titulo}</td>
+    <td><button class="openAlbum" type="button" id="album-${index}">▶</button></td>
     `
     tbodyAlbuns.appendChild(newRow);
   }
@@ -440,21 +441,12 @@ const limparSelect = () => selectMusicas.innerHTML = '';
 
 // FILTRAR AS MUSICAS PELO ALBUM
 
-const filtrarMusicas = async () => {
-
-  limparTabela()
-  linhasFiltradas()
-}
-
-const linhasFiltradas = async (event) => {
+const filtrarMusicas = async (event) => {
   const musicas_db = await getIndexedDB()
   const albuns_db = getLocalStorage()
-
-  console.log(event.target.id);
   
   musicas_db.forEach(musica => {
-    if (event.target.id == 0) {
-      alert('pegou')
+    if (event.target) {
       const album = albuns_db[index];
       const newRow = document.createElement('tr')
       newRow.id = index
@@ -465,7 +457,10 @@ const linhasFiltradas = async (event) => {
       tbodyAlbuns.appendChild(newRow);
     }
   });
+  limparTabela()
+  await linhasFiltradas()
 }
+
 
 
 //================
