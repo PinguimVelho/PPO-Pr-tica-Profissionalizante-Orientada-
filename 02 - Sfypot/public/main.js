@@ -1,7 +1,7 @@
 const formulario = document.querySelector('.form-musica')
 const btnEnviar = document.querySelector('#enviar-musica')
 const btnCancel = document.querySelector('#cancelMusica')
-const tbody = document.querySelector("tbody");
+const tbody = document.querySelector("#list-musicas tbody");
 const dataIndex_modal = formulario.querySelector('#title')
 
 const classPlayer = document.querySelector('.player')
@@ -29,6 +29,8 @@ const formAlbum = document.querySelector(".form-album");
 const btnCriarAlbum = document.querySelector("#enviar-album");
 const btnCancelarAlbum = document.querySelector("#cancel-album");
 const selectMusicas = document.querySelector("#selectMusicas");
+
+const tbodyAlbuns = document.querySelector('#list-albuns tbody')
 
 
 class Album {
@@ -85,8 +87,6 @@ const salvarMusica = async () => {
       await updateMusica(index, new Musica(arquivo, titulo.trim(), autor.trim(), genero.trim()))
     }
     formulario.reset()
-    limparTabela()
-    await criarLinha()
     updateTabela()
     closeModal()
     dataIndex_modal.dataset.index = 'new'
@@ -131,9 +131,7 @@ const updateTabela = async () => {
   await criarLinha()
 }
 
-const limparTabela = () => {
-  tbody.innerHTML = '';
-}
+const limparTabela = () => tbody.innerHTML = '';
 
 // =======================================
 // Acões da musica
@@ -378,16 +376,44 @@ const deleteAlbum = (index) => {
   setLocalStorage(albuns_db)
 }
 
-const salvarAlbum = () => {
+const salvarAlbum = async () => {
   const capa = formAlbum.querySelector('#capa-album').files[0]
   const reader = new FileReader()
-
   const titulo = formAlbum.querySelector('#titulo-album').value
-  const musicas = []
+  const selects = document.querySelectorAll('#selectMusicas input[type="checkbox"]:checked')
+  const musicas = Array.from(selects).map(input => input.value)
 
-  reader.onload = () => { createAlbum(new Album(reader.result, titulo, [1, 3])) }
+  reader.onload = () => {
+    createAlbum(new Album(reader.result, titulo, musicas))
+    formAlbum.reset()
+    atualizarAlbuns()
+    closeAlbumModal()
+  }
   reader.readAsDataURL(capa)
-  closeAlbumModal()
+}
+
+atualizarAlbuns = async () => {
+  limparAlbuns()
+  await criarLinhaAlbum()
+}
+
+
+const limparAlbuns = () => tbodyAlbuns.innerHTML = ''
+
+const criarLinhaAlbum = async () => {
+  const albuns_db = getLocalStorage()
+  for (let index = 0; index < albuns_db.length; index++) {
+    const album = albuns_db[index];
+    const newDiv = document.createElement('div')
+    
+    const newRow = document.createElement('tr')
+    newRow.id = index
+    newRow.innerHTML = `
+    <td><img src="${album.capa}"</td>
+    <td>${album.titulo}</td>
+    `
+    tbodyAlbuns.appendChild(newRow);
+  }
 }
 
 const carregarSelect = async () => {
@@ -411,6 +437,35 @@ const carregarSelect = async () => {
 }
 
 const limparSelect = () => selectMusicas.innerHTML = '';
+
+// FILTRAR AS MUSICAS PELO ALBUM
+
+const filtrarMusicas = async () => {
+
+  limparTabela()
+  linhasFiltradas()
+}
+
+const linhasFiltradas = async (event) => {
+  const musicas_db = await getIndexedDB()
+  const albuns_db = getLocalStorage()
+
+  console.log(event.target.id);
+  
+  musicas_db.forEach(musica => {
+    if (event.target.id == 0) {
+      alert('pegou')
+      const album = albuns_db[index];
+      const newRow = document.createElement('tr')
+      newRow.id = index
+      newRow.innerHTML = `
+        <td><img src="${album.capa}"</td>
+        <td>${album.titulo}</td>
+        `
+      tbodyAlbuns.appendChild(newRow);
+    }
+  });
+}
 
 
 //================
@@ -457,7 +512,10 @@ document.querySelector('#cancel-album')    // Fechar o modal
 
 btnCriarAlbum.addEventListener('click', salvarAlbum)
 
+// Filtro dos albuns
+
+tbodyAlbuns.addEventListener('click', filtrarMusicas)
 
 
-
+atualizarAlbuns()
 updateTabela()
