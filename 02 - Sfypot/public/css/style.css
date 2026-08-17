@@ -708,3 +708,66 @@ button[id^="delete"]:hover {
 
     border: none;
 }
+
+/* =========================================================
+   BOTÃO DO ÁLBUM
+========================================================= */
+
+#list-albuns tbody tr {
+    position: relative;
+}
+
+#list-albuns tbody tr td:nth-child(2) {
+    padding-right: 60px;
+}
+
+#list-albuns tbody tr td:nth-child(3) {
+    position: absolute;
+
+    right: 10px;
+    bottom: 4px;
+
+    width: auto;
+
+    padding: 0;
+
+    border: none;
+}
+
+.openAlbum {
+    width: 36px;
+    height: 36px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: rgba(139, 92, 246, 0.12);
+    color: #b994ff;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    transition:
+        transform var(--transition),
+        background var(--transition),
+        color var(--transition),
+        box-shadow var(--transition);
+}
+
+.openAlbum:hover {
+    background: rgba(139, 92, 246, 0.25);
+
+    color: white;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 15px rgba(139, 92, 246, 0.20);
+}

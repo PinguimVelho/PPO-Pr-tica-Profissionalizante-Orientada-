@@ -405,7 +405,7 @@ const criarLinhaAlbum = async () => {
   for (let index = 0; index < albuns_db.length; index++) {
     const album = albuns_db[index];
     const newDiv = document.createElement('div')
-    
+
     const newRow = document.createElement('tr')
     newRow.id = index
     newRow.innerHTML = `
@@ -442,23 +442,42 @@ const limparSelect = () => selectMusicas.innerHTML = '';
 // FILTRAR AS MUSICAS PELO ALBUM
 
 const filtrarMusicas = async (event) => {
-  const musicas_db = await getIndexedDB()
-  const albuns_db = getLocalStorage()
-  
-  musicas_db.forEach(musica => {
-    if (event.target) {
-      const album = albuns_db[index];
-      const newRow = document.createElement('tr')
-      newRow.id = index
-      newRow.innerHTML = `
-        <td><img src="${album.capa}"</td>
-        <td>${album.titulo}</td>
-        `
-      tbodyAlbuns.appendChild(newRow);
+  if (event.target.type == 'button') {
+    limparTabela()
+
+
+    const musicas_db = await getIndexedDB()
+    const albuns_db = getLocalStorage()
+    const [action, indexStr] = event.target.id.split('-')
+    const album = albuns_db[indexStr];
+    const musicasAlbum = album.musicas
+
+    for (const musicaAlbum of musicasAlbum) {
+      for (let index = 0; index < musicas_db.length; index++) {
+        const musica = musicas_db[index]
+        const audioURL = URL.createObjectURL(musica.mp3)
+        const audio = new Audio(audioURL)
+        await new Promise(resolve => {
+          audio.onloadedmetadata = resolve
+        })
+        const duracao = audio.duration
+        if (musicaAlbum == musica.titulo) {
+          const newRow = document.createElement('tr')
+          newRow.innerHTML = `
+          <td><button class="playPorMusica" type="button" id="play-${index}">▶</button>
+          <td>${musica.titulo}</td>
+          <td>${musica.autor}</td>
+          <td>${formatarDuracao(duracao)}</td>
+          <td>
+          <button type="button" id="edit-${index}"><i id="edit-${index}" class="bx bxs-pencil"></i></button>
+          <button type="button" id="delete-${index}"><i id="delete-${index}" class="bx bxs-trash-alt"></i></button>
+          </td>
+          `
+          tbody.appendChild(newRow);
+        }
+      }
     }
-  });
-  limparTabela()
-  await linhasFiltradas()
+  }
 }
 
 
